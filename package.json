@@ -1,0 +1,45 @@
+{
+  "name": "niffer",
+  "version": "0.0.0",
+  "description": "Application for generate Invoices.",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "publish": "electron-builder --publish always"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psyfr0st/niffer.git"
+  },
+  "author": "psyfr0st",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "electron": "^36.4.0",
+    "electron-store": "^10.0.1",
+    "electron-updater": "^6.6.2"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.example.electrondbapp",
+    "productName": "Electron DB App",
+    "copyright": "Copyright © 2023",
+    "linux": {
+      "target": ["deb", "tar.gz"],
+      "category": "Utility"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "psyfr0st",
+      "repo": "niffer"
+    }
+  }
+}

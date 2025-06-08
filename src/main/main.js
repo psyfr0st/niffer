@@ -1,10 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
-const Store = require('electron-store');
+const ElectronStore = require('electron-store').default;
 const db = require('./database');
 
-const store = new Store();
+app.commandLine.appendSwitch('disable-gpu');
+app.commandLine.appendSwitch('disable-software-rasterizer');
+
+const store = new ElectronStore();
 
 let mainWindow;
 
@@ -22,11 +25,25 @@ function createWindow() {
     }
   });
 
+  if (process.platform === 'linux') {
+    process.env.APPIMAGE = process.env.APPIMAGE || '/usr/bin/electron';
+  }
+
+  // Adicione isso ANTES de criar a janela
+  ipcMain.handle('test-db-connection', async (event, config) => {
+    try {
+      await db.testConnection(config);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  });
+
   // Carrega a tela apropriada baseada na configuração
   if (hasDbConfig) {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/index/index.html'));
+    mainWindow.loadFile(path.join(__dirname, './renderer/index/index.html'));
   } else {
-    mainWindow.loadFile(path.join(__dirname, '../renderer/setup/setup.html'));
+    mainWindow.loadFile(path.join(__dirname, './renderer/setup/setup.html'));
   }
 
   // Verifica por atualizações

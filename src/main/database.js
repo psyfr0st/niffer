@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 const mysql = require('mysql2/promise');
-const Store = require('electron-store');
+const ElectronStore = require('electron-store').default;
 
-const store = new Store();
+const store = new ElectronStore();
 let pool;
 
 module.exports = {
@@ -21,32 +21,34 @@ module.exports = {
   },
 
   async testConnection(config) {
-    if (config.dbType === 'postgresql') {
-      const tempPool = new Pool({
-        user: config.username,
-        host: config.host,
-        database: config.database,
-        password: config.password,
-        port: config.port,
-      });
-      try {
+    try {
+      if (config.dbType === 'postgresql') {
+        const tempPool = new Pool({
+          user: config.username,
+          host: config.host,
+          database: config.database,
+          password: config.password,
+          port: config.port,
+        });
         await tempPool.query('SELECT 1');
-        return true;
-      } finally {
         await tempPool.end();
+        return true;
+      } else if (config.dbType === 'mysql') {
+        const connection = await mysql.createConnection({
+          host: config.host,
+          user: config.username,
+          password: config.password,
+          database: config.database,
+          port: config.port,
+        });
+        await connection.end();
+        return true;
       }
-    } else if (config.dbType === 'mysql') {
-      const connection = await mysql.createConnection({
-        host: config.host,
-        user: config.username,
-        password: config.password,
-        database: config.database,
-        port: config.port,
-      });
-      await connection.end();
-      return true;
+      throw new Error('Database type not supported');
+    } catch (error) {
+      console.error('Connection test failed:', error);
+      throw error;
     }
-    throw new Error('Tipo de banco de dados não suportado');
   },
 
   async query(sql, params) {

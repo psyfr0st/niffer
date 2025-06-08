@@ -2,6 +2,11 @@ const { autoUpdater } = require('electron-updater');
 const { ipcMain } = require('electron');
 
 module.exports = () => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Skipping auto-update checks in development');
+    return;
+  }
+
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
 
@@ -11,9 +16,5 @@ module.exports = () => {
 
   autoUpdater.on('update-downloaded', () => {
     mainWindow.webContents.send('update_downloaded');
-  });
-
-  ipcMain.on('restart_app', () => {
-    autoUpdater.quitAndInstall();
   });
 };

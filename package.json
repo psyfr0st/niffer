@@ -14,27 +14,42 @@
     "type": "git",
     "url": "https://github.com/psyfr0st/niffer.git"
   },
-  "author": "psyfr0st",
+  "author": {
+    "name": "psyfr0st",
+    "email": "frost.luisbpborges@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.5.0",
-    "electron": "^36.4.0",
     "electron-store": "^10.0.1",
-    "electron-updater": "^6.6.2"
+    "electron-updater": "^6.6.2",
+    "mysql2": "^3.14.1",
+    "pg": "^8.16.0"
   },
   "devDependencies": {
+    "electron": "^36.4.0",
     "electron-builder": "^26.0.12"
   },
   "build": {
-    "appId": "com.example.electrondbapp",
-    "productName": "Electron DB App",
+    "appId": "xyz.neoncore.niffer",
+    "productName": "Niffer",
     "copyright": "Copyright © 2023",
     "linux": {
-      "target": ["deb", "tar.gz"],
+      "target": [
+        "deb",
+        "tar.gz"
+      ],
       "category": "Utility"
     },
     "win": {
-      "target": "nsis"
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "deb": {
+      "maintainer": "frost.luisbpborges@gmail.com"
     },
     "publish": {
       "provider": "github",

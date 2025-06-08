@@ -14,6 +14,7 @@ linux:
     - tar.gz
   category: Utility
   icon: build/icon.png
+  maintainer: "frost.luisbpborges@gmail.com"
 win:
   target: nsis
   icon: build/icon.ico
